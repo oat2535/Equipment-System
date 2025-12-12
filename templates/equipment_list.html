@@ -273,7 +273,7 @@
         $('#dataTable').on('click', '.qr-btn', function() {
             var equipmentId = $(this).data('id');
             var equipmentName = $(this).data('name');
-            var url = window.location.origin + "/equipment/edit/" + equipmentId + "/"; // Link to edit page
+            var url = window.location.origin + "/request/" + equipmentId + "/"; // Link to request page
             
             $('#qrModalLabel').text("QR Code for " + equipmentName);
             $('#qrText').text(equipmentName);
