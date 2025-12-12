@@ -47,6 +47,7 @@ class Requisition(models.Model):
     actual_return_date = models.DateTimeField(null=True, blank=True)
     approve_date = models.DateTimeField(null=True, blank=True)
     reject_date = models.DateTimeField(null=True, blank=True)
+    reject_reason = models.TextField(blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.equipment.name} ({self.status})"

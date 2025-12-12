@@ -189,14 +189,19 @@ def reject_request(request, requisition_id):
         
     requisition = get_object_or_404(Requisition, pk=requisition_id)
     
-    # Restore quantity if rejected (Actually we deducted on Request, so we MUST restore on Reject)
-    equipment = requisition.equipment
-    equipment.available_quantity += requisition.quantity
-    equipment.save()
-    
-    requisition.status = 'REJECTED'
-    requisition.reject_date = timezone.now()
-    requisition.save()
+    if request.method == 'POST':
+        reason = request.POST.get('reject_reason', '')
+        
+        # Restore quantity if rejected (Actually we deducted on Request, so we MUST restore on Reject)
+        equipment = requisition.equipment
+        equipment.available_quantity += requisition.quantity
+        equipment.save()
+        
+        requisition.status = 'REJECTED'
+        requisition.reject_date = timezone.now()
+        requisition.reject_reason = reason
+        requisition.save()
+        
     return redirect('manage_requests')
 
 @login_required
