@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Cart - Asset Management System{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">My Cart</h1>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Selected Equipment</h6>
+        {% if equipment_list %}
+        <a href="{% url 'clear_cart' %}" class="btn btn-sm btn-danger shadow-sm">
+            <i class="fas fa-trash fa-sm text-white-50"></i> Clear Cart
+        </a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if equipment_list %}
+        <form method="post" action="{% url 'checkout' %}">
+            {% csrf_token %}
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Equipment</th>
+                            <th>Serial No.</th>
+                            <th>Category</th>
+                            <th style="width: 150px;">Quantity</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for equipment in equipment_list %}
+                        <tr>
+                            <td style="width: 100px;">
+                                 {% if equipment.image %}
+                                    <img src="{{ equipment.image.url }}" class="img-fluid rounded" alt="{{ equipment.name }}">
+                                {% else %}
+                                    <img src="{% static 'img/undraw_posting_photo.svg' %}" class="img-fluid rounded" alt="No Image">
+                                {% endif %}
+                            </td>
+                            <td>{{ equipment.name }}</td>
+                            <td>{{ equipment.serial_number|default:"-" }}</td>
+                            <td>{{ equipment.category.name }}</td>
+                            <td>
+                                <input type="number" name="quantity_{{ equipment.id }}" class="form-control" value="1" min="1" max="{{ equipment.available_quantity }}" required>
+                                <small class="text-muted">Max: {{ equipment.available_quantity }}</small>
+                            </td>
+                            <td>
+                                <a href="{% url 'remove_from_cart' equipment.id %}" class="btn btn-danger btn-sm btn-circle">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
+            <div class="row justify-content-end">
+                <div class="col-lg-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title">Checkout</h5>
+                                <div class="form-group">
+                                    <label for="return_date">Expected Return Date</label>
+                                    <input type="date" name="return_date" id="return_date" class="form-control" required>
+                                    <small class="form-text text-muted">This date applies to all items in the cart.</small>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-block btn-lg">
+                                    <i class="fas fa-check"></i> Confirm Request
+                                </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        {% else %}
+        <div class="text-center py-5">
+            <p class="lead text-gray-500 mb-4">Your cart is empty.</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-primary">Start Browsing</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

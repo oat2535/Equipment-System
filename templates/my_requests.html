@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Requests - Asset Management System{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">My Requests</h1>
+</div>
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Request History</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Equipment</th>
+                        <th>Quantity</th>
+                        <th>Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requisitions %}
+                    <tr>
+                        <td>{{ req.equipment.name }}</td>
+                        <td>{{ req.quantity }}</td>
+                        <td>{{ req.date|date:"Y-m-d H:i" }}</td>
+                        <td class="{% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}text-danger font-weight-bold{% endif %}">
+                            {{ req.return_date|date:"Y-m-d"|default:"-" }}
+                            {% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}
+                             (Overdue)
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if req.status == 'APPROVED' %}
+                                <span class="badge badge-success">Approved</span>
+                            {% elif req.status == 'PENDING' %}
+                                <span class="badge badge-warning">Pending</span>
+                            {% elif req.status == 'REJECTED' %}
+                                <span class="badge badge-danger">Rejected</span>
+                            {% elif req.status == 'RETURNED' %}
+                                <span class="badge badge-info">Returned</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <!-- DataTable handles empty state, or keep for no-js fallback -->
+                        <td colspan="5" class="text-center">No requests found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "order": [[ 2, "desc" ]] // Sort by Date by default
+        });
+    });
+</script>
+{% endblock %}
