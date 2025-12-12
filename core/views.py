@@ -168,7 +168,7 @@ def my_requests(request):
 def manage_requests(request):
     if not request.user.is_staff:
         return redirect('dashboard')
-    requisitions = Requisition.objects.all().order_by('-date')
+    requisitions = Requisition.objects.all().order_by('-id')
     return render(request, 'manage_requests.html', {'requisitions': requisitions})
 
 @login_required
@@ -179,6 +179,7 @@ def approve_request(request, requisition_id):
     requisition = get_object_or_404(Requisition, pk=requisition_id)
     requisition.status = 'APPROVED'
     requisition.approve_date = timezone.now()
+    requisition.approved_by = request.user
     requisition.save()
     return redirect('manage_requests')
 
@@ -200,6 +201,7 @@ def reject_request(request, requisition_id):
         requisition.status = 'REJECTED'
         requisition.reject_date = timezone.now()
         requisition.reject_reason = reason
+        requisition.rejected_by = request.user
         requisition.save()
         
     return redirect('manage_requests')
@@ -215,6 +217,7 @@ def receive_request(request, requisition_id):
     if requisition.status == 'APPROVED':
         requisition.status = 'RETURNED'
         requisition.actual_return_date = timezone.now()
+        requisition.received_by = request.user
         requisition.save()
         
         # Restore stock

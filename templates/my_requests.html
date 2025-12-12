@@ -42,13 +42,13 @@
                         </td>
                         <td>
                             {% if req.status == 'APPROVED' %}
-                                <span class="badge badge-success">Approved</span>
+                                <span class="badge badge-success" title="Approver: {{ req.approved_by.username|default:'-' }}" data-toggle="tooltip">Approved</span>
                             {% elif req.status == 'PENDING' %}
                                 <span class="badge badge-warning">Pending</span>
                             {% elif req.status == 'REJECTED' %}
-                                <span class="badge badge-danger">Rejected</span>
+                                <span class="badge badge-danger" title="Rejected by: {{ req.rejected_by.username|default:'-' }} - Reason: {{ req.reject_reason|default:'-' }}" data-toggle="tooltip">Rejected</span>
                             {% elif req.status == 'RETURNED' %}
-                                <span class="badge badge-info">Returned</span>
+                                <span class="badge badge-info" title="Received by: {{ req.received_by.username|default:'-' }}" data-toggle="tooltip">Returned</span>
                             {% endif %}
                         </td>
                     </tr>
@@ -70,9 +70,17 @@
 <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 <script>
     $(document).ready(function() {
-        $('#dataTable').DataTable({
+        var table = $('#dataTable').DataTable({
             "order": [[ 2, "desc" ]] // Sort by Date by default
         });
+
+        // Initialize Tooltips on table draw
+        table.on('draw', function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        
+        // Initial init
+        $('[data-toggle="tooltip"]').tooltip();
     });
 </script>
 {% endblock %}

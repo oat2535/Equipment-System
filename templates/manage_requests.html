@@ -45,11 +45,11 @@
                             {% if req.status == 'PENDING' %}
                                 <span class="badge badge-warning">Pending</span>
                             {% elif req.status == 'APPROVED' %}
-                                <span class="badge badge-success">Approved</span>
+                                <span class="badge badge-success" title="Approver: {{ req.approved_by.username|default:'-' }}" data-toggle="tooltip">Approved</span>
                             {% elif req.status == 'REJECTED' %}
-                                <span class="badge badge-danger" title="{{ req.reject_reason|default:'' }}" data-toggle="tooltip">Rejected</span>
+                                <span class="badge badge-danger" title="Rejected by: {{ req.rejected_by.username|default:'-' }} - Reason: {{ req.reject_reason|default:'-' }}" data-toggle="tooltip">Rejected</span>
                             {% elif req.status == 'RETURNED' %}
-                                <span class="badge badge-info">Returned</span>
+                                <span class="badge badge-info" title="Received by: {{ req.received_by.username|default:'-' }}" data-toggle="tooltip">Returned</span>
                             {% endif %}
                         </td>
                         <td class="align-middle small">{{ req.date|date:"Y-m-d H:i" }}</td>
@@ -79,7 +79,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="11" class="text-center">No requests found.</td>
+                        <td colspan="12" class="text-center">No requests found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -122,7 +122,7 @@
 <script>
     $(document).ready(function() {
         var table = $('#dataTable').DataTable({
-            "order": [[ 4, "desc" ]] // Sort by Request Date by default
+            "order": [[ 0, "desc" ]] // Sort by ID desc
         });
 
         // Initialize Tooltips on table draw (for pagination/sorting)

@@ -48,6 +48,10 @@ class Requisition(models.Model):
     approve_date = models.DateTimeField(null=True, blank=True)
     reject_date = models.DateTimeField(null=True, blank=True)
     reject_reason = models.TextField(blank=True)
+    
+    approved_by = models.ForeignKey(User, related_name='approved_requisitions', on_delete=models.SET_NULL, null=True, blank=True)
+    rejected_by = models.ForeignKey(User, related_name='rejected_requisitions', on_delete=models.SET_NULL, null=True, blank=True)
+    received_by = models.ForeignKey(User, related_name='received_requisitions', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"{self.user.username} - {self.equipment.name} ({self.status})"
