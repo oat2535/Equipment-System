@@ -96,19 +96,23 @@
             </li>
             {% endif %}
 
+            {% if user.is_staff %}
             <!-- Nav Item - Report -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'request_report' %}">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Report</span></a>
             </li>
+            {% endif %}
 
+            {% comment %}
             <!-- Nav Item - Scan QR -->
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'scan_qr' %}">
                     <i class="fas fa-fw fa-qrcode"></i>
                     <span>Scan QR</span></a>
             </li>
+            {% endcomment %}
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

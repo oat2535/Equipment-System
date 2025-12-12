@@ -4,6 +4,23 @@
 
 {% block content %}
 <div class="row justify-content-center">
+    <!-- Equipment Image Column -->
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-body text-center">
+                {% if equipment.image %}
+                    <img src="{{ equipment.image.url }}" class="img-fluid rounded" alt="{{ equipment.name }}" style="max-height: 300px; object-fit: cover;">
+                {% else %}
+                    <div class="py-5">
+                        <i class="fas fa-image fa-5x text-gray-300"></i>
+                        <p class="mt-3 text-muted">No Image Available</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Form Column -->
     <div class="col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
