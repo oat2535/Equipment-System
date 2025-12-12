@@ -18,28 +18,30 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-light">
                     <tr>
-                        <th>User</th>
-                        <th>Equipment</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                        <th>Request Date</th>
-                        <th>Return Date</th>
-                        <th>Approve Date</th>
-                        <th>Reject Date</th>
-                        <th>Returned Date</th>
-                        <th>Actions</th>
+                        <th style="width: 10%;">User</th>
+                        <th style="width: 15%;">Equipment</th>
+                        <th style="width: 15%;">Reason</th>
+                        <th style="width: 5%;" class="text-center">Qty</th>
+                        <th style="width: 10%;" class="text-center">Status</th>
+                        <th style="width: 10%;">Request Date</th>
+                        <th style="width: 10%;">Return Date</th>
+                        <th style="width: 10%;">Approve Date</th>
+                        <th style="width: 10%;">Reject Date</th>
+                        <th style="width: 10%;">Returned Date</th>
+                        <th style="width: 5%;" class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for req in requisitions %}
                     <tr>
-                        <td>{{ req.user.username }}</td>
-                        <td>{{ req.equipment.name }}</td>
-                        <td>{{ req.quantity }}</td>
-                        <td>
+                        <td class="align-middle">{{ req.user.username }}</td>
+                        <td class="align-middle">{{ req.equipment.name }}</td>
+                        <td class="align-middle" title="{{ req.reason|default:'' }}">{{ req.reason|default:"-"|truncatechars:20 }}</td>
+                        <td class="align-middle text-center">{{ req.quantity }}</td>
+                        <td class="align-middle text-center">
                             {% if req.status == 'PENDING' %}
                                 <span class="badge badge-warning">Pending</span>
                             {% elif req.status == 'APPROVED' %}
@@ -50,14 +52,15 @@
                                 <span class="badge badge-info">Returned</span>
                             {% endif %}
                         </td>
-                        <td>{{ req.date|date:"Y-m-d H:i" }}</td>
-                        <td>{{ req.return_date|date:"Y-m-d"|default:"-" }}</td>
-                        <td>{{ req.approve_date|date:"Y-m-d H:i"|default:"-" }}</td>
-                        <td>{{ req.reject_date|date:"Y-m-d H:i"|default:"-" }}</td>
-                        <td>{{ req.actual_return_date|date:"Y-m-d H:i"|default:"-" }}</td>
-                        <td>
+                        <td class="align-middle small">{{ req.date|date:"Y-m-d H:i" }}</td>
+                        <td class="align-middle small">{{ req.return_date|date:"Y-m-d"|default:"-" }}</td>
+                        <td class="align-middle small">{{ req.approve_date|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td class="align-middle small">{{ req.reject_date|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td class="align-middle small">{{ req.actual_return_date|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td class="align-middle text-center">
+                            <div class="d-flex justify-content-center">
                             {% if req.status == 'PENDING' %}
-                            <a href="{% url 'approve_request' req.id %}" class="btn btn-success btn-sm btn-circle" title="Approve">
+                            <a href="{% url 'approve_request' req.id %}" class="btn btn-success btn-sm btn-circle mr-1" title="Approve">
                                 <i class="fas fa-check"></i>
                             </a>
                             <a href="{% url 'reject_request' req.id %}" class="btn btn-danger btn-sm btn-circle" title="Reject">
@@ -71,12 +74,12 @@
                                 <span class="text">Receive</span>
                             </a>
                             {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <!-- DataTable handles empty state, or keep for no-js fallback, but colspan must match columns=10 -->
-                        <td colspan="10" class="text-center">No requests found.</td>
+                        <td colspan="11" class="text-center">No requests found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
