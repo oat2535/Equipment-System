@@ -18,44 +18,53 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                <thead>
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="thead-light">
                     <tr>
-                        <th>Equipment</th>
-                        <th>Quantity</th>
-                        <th>Date</th>
-                        <th>Return Date</th>
-                        <th>Status</th>
+                        <th style="width: 10%;">User</th>
+                        <th style="width: 15%;">Equipment</th>
+                        <th style="width: 15%;">Reason</th>
+                        <th style="width: 5%;" class="text-center">Qty</th>
+                        <th style="width: 10%;" class="text-center">Status</th>
+                        <th style="width: 10%;">Request Date</th>
+                        <th style="width: 10%;">Return Date</th>
+                        <th style="width: 10%;">Approve Date</th>
+                        <th style="width: 10%;">Reject Date</th>
+                        <th style="width: 10%;">Returned Date</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for req in requisitions %}
                     <tr>
-                        <td>{{ req.equipment.name }}</td>
-                        <td>{{ req.quantity }}</td>
-                        <td>{{ req.date|date:"Y-m-d H:i" }}</td>
-                        <td class="{% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}text-danger font-weight-bold{% endif %}">
-                            {{ req.return_date|date:"Y-m-d"|default:"-" }}
-                            {% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}
-                             (Overdue)
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if req.status == 'APPROVED' %}
-                                <span class="badge badge-success" title="Approver: {{ req.approved_by.username|default:'-' }}" data-toggle="tooltip">Approved</span>
-                            {% elif req.status == 'PENDING' %}
+                        <td class="align-middle">{{ req.user.first_name }} {{ req.user.last_name }}</td>
+                        <td class="align-middle">{{ req.equipment.name }}</td>
+                        <td class="align-middle" title="{{ req.reason|default:'' }}">{{ req.reason|default:"-"|truncatechars:20 }}</td>
+                        <td class="align-middle text-center">{{ req.quantity }}</td>
+                        <td class="align-middle text-center">
+                            {% if req.status == 'PENDING' %}
                                 <span class="badge badge-warning">Pending</span>
+                            {% elif req.status == 'APPROVED' %}
+                                <span class="badge badge-success" title="Approver: {{ req.approved_by.username|default:'-' }}" data-toggle="tooltip">Approved</span>
                             {% elif req.status == 'REJECTED' %}
                                 <span class="badge badge-danger" title="Rejected by: {{ req.rejected_by.username|default:'-' }} - Reason: {{ req.reject_reason|default:'-' }}" data-toggle="tooltip">Rejected</span>
                             {% elif req.status == 'RETURNED' %}
                                 <span class="badge badge-info" title="Received by: {{ req.received_by.username|default:'-' }}" data-toggle="tooltip">Returned</span>
                             {% endif %}
                         </td>
+                        <td class="align-middle small">{{ req.date|date:"Y-m-d H:i" }}</td>
+                        <td class="align-middle small {% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}text-danger font-weight-bold{% endif %}">
+                            {{ req.return_date|date:"Y-m-d"|default:"-" }}
+                            {% if req.status == 'APPROVED' and req.return_date and req.return_date < now %}
+                             (Overdue)
+                            {% endif %}
+                        </td>
+                        <td class="align-middle small">{{ req.approve_date|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td class="align-middle small">{{ req.reject_date|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td class="align-middle small">{{ req.actual_return_date|date:"Y-m-d H:i"|default:"-" }}</td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <!-- DataTable handles empty state, or keep for no-js fallback -->
-                        <td colspan="5" class="text-center">No requests found.</td>
+                        <td colspan="10" class="text-center">No requests found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -71,7 +80,7 @@
 <script>
     $(document).ready(function() {
         var table = $('#dataTable').DataTable({
-            "order": [[ 2, "desc" ]] // Sort by Date by default
+            "order": [] // Respect server-side ordering
         });
 
         // Initialize Tooltips on table draw

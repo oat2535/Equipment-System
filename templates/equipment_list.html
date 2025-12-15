@@ -133,11 +133,9 @@
                         <td class="align-middle">{{ equipment.description|truncatechars:30 }}</td>
                         <td class="align-middle">{{ equipment.category.name }}</td>
                         <td class="text-center align-middle">
-                            {% if user.is_staff %}
                             <button class="btn btn-light btn-sm qr-btn border" data-id="{{ equipment.id }}" data-name="{{ equipment.name }}">
                                 <i class="fas fa-qrcode text-dark"></i>
                             </button>
-                            {% endif %}
                         </td>
                         <td class="text-center align-middle">
                             <div class="d-flex justify-content-center">

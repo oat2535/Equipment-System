@@ -37,7 +37,7 @@
                 <tbody>
                     {% for req in requisitions %}
                     <tr>
-                        <td class="align-middle">{{ req.user.username }}</td>
+                        <td class="align-middle">{{ req.user.first_name }} {{ req.user.last_name }}</td>
                         <td class="align-middle">{{ req.equipment.name }}</td>
                         <td class="align-middle" title="{{ req.reason|default:'' }}">{{ req.reason|default:"-"|truncatechars:20 }}</td>
                         <td class="align-middle text-center">{{ req.quantity }}</td>
@@ -122,7 +122,7 @@
 <script>
     $(document).ready(function() {
         var table = $('#dataTable').DataTable({
-            "order": [[ 0, "desc" ]] // Sort by ID desc
+            "order": [] // Respect server-side ordering (ID desc)
         });
 
         // Initialize Tooltips on table draw (for pagination/sorting)
