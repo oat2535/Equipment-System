@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c!r(*izuwekc4cvbhhs#wwa0s#enz=8r$kqc2x%p*ly0gid+=9
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.38', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.38', 'localhost', '127.0.0.1', 'oat2535.pythonanywhere.com', '*']
 
 
 # Application definition
@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    # Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -140,3 +146,36 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 60 * 60  # 1 hour
 SESSION_SAVE_EVERY_REQUEST = True
+
+# Authentication Backends
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SITE_ID = 1
+
+# Allauth Configuration
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'APP': {
+            'client_id': '76223455748-ql1dtc0akglfgtu67h4juqe3acqha4sc.apps.googleusercontent.com',
+            'secret': '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',
+            'key': ''
+        }
+    }
+}
+
+LOGIN_URL = 'login'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'none' # Simplified for internal app
+
