@@ -45,11 +45,11 @@
                             {% if req.status == 'PENDING' %}
                                 <span class="badge badge-warning">Pending</span>
                             {% elif req.status == 'APPROVED' %}
-                                <span class="badge badge-success" title="Approver: {{ req.approved_by.username|default:'-' }}" data-toggle="tooltip">Approved</span>
+                                <span class="badge badge-success" title="Approver: {{ req.approved_by.first_name|default:'-' }} {{ req.approved_by.last_name|default:'-' }}" data-toggle="tooltip">Approved</span>
                             {% elif req.status == 'REJECTED' %}
-                                <span class="badge badge-danger" title="Rejected by: {{ req.rejected_by.username|default:'-' }} - Reason: {{ req.reject_reason|default:'-' }}" data-toggle="tooltip">Rejected</span>
+                                <span class="badge badge-danger" title="Rejected by: {{ req.rejected_by.first_name|default:'-' }} {{ req.rejected_by.last_name|default:'-' }} <br>Reason: {{ req.reject_reason|default:'-' }}" data-toggle="tooltip" data-html="true">Rejected</span>
                             {% elif req.status == 'RETURNED' %}
-                                <span class="badge badge-info" title="Received by: {{ req.received_by.username|default:'-' }}" data-toggle="tooltip">Returned</span>
+                                <span class="badge badge-info" title="Received by: {{ req.received_by.first_name|default:'-' }} {{ req.received_by.last_name|default:'-' }}" data-toggle="tooltip">Returned</span>
                             {% endif %}
                         </td>
                         <td class="align-middle small">{{ req.date|date:"Y-m-d H:i" }}</td>
